@@ -5,9 +5,7 @@ import json
 from datetime import datetime
 from itertools import combinations
 
-# ──────────────────────────────────────────────────────────────
-# 🔧 BASE DE DATOS & INICIALIZACIÓN
-# ──────────────────────────────────────────────────────────────
+
 DB_FILE = "mundial_2026_grupos.db"
 
 def init_db():
@@ -44,9 +42,7 @@ def get_leaderboard():
 
 init_db()
 
-# ──────────────────────────────────────────────────────────────
-# 🌍 CONFIGURACIÓN EDITABLE
-# ──────────────────────────────────────────────────────────────
+#Grupos
 GROUPS = {
     "A": ["🇲🇽 México", "🇿🇦 Sudáfrica", "🇰🇷 Corea del Sur", "🇨🇿 Chequia"],
     "B": ["🇨🇦 Canadá", "🇧🇦 Bosnia y Herzegovina", "🇶🇦 Catar", "🇨🇭 Suiza"],
@@ -64,9 +60,7 @@ GROUPS = {
 
 GROUP_MATCHES = {grp: list(combinations(teams, 2)) for grp, teams in GROUPS.items()}
 
-# ──────────────────────────────────────────────────────────────
-# 📊 LÓGICA DE CLASIFICACIÓN Y TERCEROS
-# ──────────────────────────────────────────────────────────────
+#Clasificacion de terceros
 def calc_standings(group, matches_scores):
     teams = GROUPS[group]
     standings = {t: {"PTS": 0, "GD": 0, "GF": 0, "GA": 0} for t in teams}
@@ -100,9 +94,7 @@ def get_best_thirds(all_standings):
     tdf.sort_values(["PTS", "GD", "GF"], ascending=False, inplace=True)
     return tdf.head(8)["Equipo"].tolist()
 
-# ──────────────────────────────────────────────────────────────
-# 🎨 ESTILO
-# ──────────────────────────────────────────────────────────────
+
 st.set_page_config(page_title="🌎 Mundial 2026 - Predictor Pro", layout="wide")
 st.markdown("""
     <style>
@@ -116,9 +108,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ──────────────────────────────────────────────────────────────
-# 🖥️ INTERFAZ & ESTADO
-# ──────────────────────────────────────────────────────────────
+
 if "user" not in st.session_state: st.session_state.user = ""
 if "step" not in st.session_state: st.session_state.step = "name"
 if "scores" not in st.session_state: st.session_state.scores = {}
@@ -132,7 +122,7 @@ tab_pred, tab_board = st.tabs(["📝 Tu Predicción", "👀 Tablero Global"])
 with tab_pred:
     st.title("🌎⚽ Predictor Mundial 2026")
     
-    # PASO 1: NOMBRE
+    
     if st.session_state.step == "name":
         st.markdown("### 👤 Identifícate")
         name = st.text_input("Nombre o apodo", key="name_input")
@@ -143,7 +133,7 @@ with tab_pred:
                 st.rerun()
             else: st.error("Ingresa un nombre.")
     
-    # PASO 2: FASE DE GRUPOS (ÚNICA ACTIVA POR AHORA)
+
     elif st.session_state.step == "groups":
         st.markdown("### 🏁 Fase de Grupos - Predice Marcadores")
         total_matches = sum(len(m) for m in GROUP_MATCHES.values())
